@@ -9,10 +9,6 @@ import solvers
 
 if not os.path.exists(OUTPUT_DIRECTORY + '/PI'):
     os.makedirs(OUTPUT_DIRECTORY + '/PI')
-if not os.path.exists(OUTPUT_DIRECTORY + '/PI/pkl'):
-    os.makedirs(OUTPUT_DIRECTORY + '/PI/pkl')
-if not os.path.exists(OUTPUT_DIRECTORY + '/images/PI'):
-    os.makedirs(OUTPUT_DIRECTORY + '/images/PI')
 
 
 class PolicyIterationExperiment(BaseExperiment):

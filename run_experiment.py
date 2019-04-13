@@ -57,12 +57,6 @@ if __name__ == '__main__':
             'name': 'frozen_lake',
             'readable_name': 'Frozen Lake (8x8)',
         }
-        # ,
-        # {
-        #     'env': environments.get_cliffwalking_environment(),
-        #     'name': 'cliff_walk',
-        #     'readable_name': 'Cliff Walk',
-        # }
     ]
 
     experiment_details = []

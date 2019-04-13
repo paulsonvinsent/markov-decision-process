@@ -9,15 +9,11 @@ import solvers
 
 if not os.path.exists(OUTPUT_DIRECTORY + '/Q'):
     os.makedirs(OUTPUT_DIRECTORY + '/Q')
-if not os.path.exists(OUTPUT_DIRECTORY + '/Q/pkl'):
-    os.makedirs(OUTPUT_DIRECTORY + '/Q/pkl')
-if not os.path.exists(OUTPUT_DIRECTORY + '/images/Q'):
-    os.makedirs(OUTPUT_DIRECTORY + '/images/Q')
 
 
 class QLearnerExperiment(BaseExperiment):
     def __init__(self, details, verbose=False):
-        self.max_episodes = 2000
+        self.max_episodes = 10000
 
         super(QLearnerExperiment, self).__init__(details, verbose)
 
@@ -32,7 +28,7 @@ class QLearnerExperiment(BaseExperiment):
         with open(grid_file_name, 'w') as f:
             f.write("params,time,steps,reward_mean,reward_median,reward_min,reward_max,reward_std\n")
 
-        alphas = [0.1, 0.5, 0.9]
+        alphas = [0.01, 0.05, 0.1, 0.3, 0.5, 0.9]
         q_inits = ['random', 0]
         epsilons = [0.1, 0.3, 0.5]
         epsilon_decays = [0.0001]

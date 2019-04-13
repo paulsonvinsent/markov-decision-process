@@ -3,18 +3,12 @@ from gym.envs.registration import register
 
 from .modified_taxi_environment import *
 from .modified_frozen_lake import *
-from .modified_cliff_walking import *
 
-__all__ = ['TaxiEnv', 'RewardingFrozenLakeEnv', 'CliffWalkingEnv']
+__all__ = ['TaxiEnv', 'RewardingFrozenLakeEnv']
 
 register(
     id='TaxiEnv-v3',
     entry_point='environments:ModifiedTaxiEnvironment'
-)
-
-register(
-    id='CliffWalkingEnv-v3',
-    entry_point='environments:CliffWalkingEnv'
 )
 
 register(
@@ -30,7 +24,3 @@ def get_frozen_lake_environment():
 
 def get_taxi_environment():
     return gym.make('TaxiEnv-v3')
-
-
-def get_cliffwalking_environment():
-    return gym.make('CliffWalkingEnv-v3')

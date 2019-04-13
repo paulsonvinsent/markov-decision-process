@@ -10,7 +10,6 @@ import numpy as np
 from abc import ABC, abstractmethod
 
 from .plotting import plot_policy_map, plot_value_map
-import solvers
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

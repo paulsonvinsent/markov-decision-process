@@ -9,10 +9,6 @@ from .base import BaseExperiment, OUTPUT_DIRECTORY
 
 if not os.path.exists(OUTPUT_DIRECTORY + '/VI'):
     os.makedirs(OUTPUT_DIRECTORY + '/VI')
-if not os.path.exists(OUTPUT_DIRECTORY + '/VI/pkl'):
-    os.makedirs(OUTPUT_DIRECTORY + '/VI/pkl')
-if not os.path.exists(OUTPUT_DIRECTORY + '/images/VI'):
-    os.makedirs(OUTPUT_DIRECTORY + '/images/VI')
 
 
 class ValueIterationExperiment(BaseExperiment):
