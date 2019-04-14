@@ -4,7 +4,7 @@ from .modified_taxi_environment import *
 
 
 def get_frozen_lake_environment():
-    return gym.make('FrozenLake-v0')
+    return gym.make('FrozenLake8x8-v0')
 
 
 def get_taxi_environment():
