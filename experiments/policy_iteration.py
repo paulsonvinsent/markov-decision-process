@@ -38,7 +38,7 @@ class PolicyIterationExperiment(BaseExperiment):
             p = solvers.PolicyIterationSolver(self._details.env, discount_factor=discount_factor,
                                               max_policy_eval_steps=3000, verbose=self._verbose)
 
-            stats = self.run_solver_and_collect(p, self.convergence_check_fn)
+            stats = self.run_solver_and_collect(p, self.convergence_check_fn, self._details.state_to_track)
 
             self.log("Took {} steps".format(len(stats.steps)))
             stats.to_csv('{}/PI/{}_{}_episodes.csv'.format(OUTPUT_DIRECTORY, self._details.env_name, discount_factor))

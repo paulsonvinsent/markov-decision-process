@@ -19,7 +19,7 @@ class PolicyIterationSolver(BaseSolver):
 
         super(PolicyIterationSolver, self).__init__(verbose)
 
-    def step(self):
+    def step(self, state_to_track):
         start_time = int(round(time.time() * 1000))
         # Evaluate the current policy
         V = self.evaluate_policy(self._policy, discount_factor=self._discount_factor,
@@ -58,8 +58,10 @@ class PolicyIterationSolver(BaseSolver):
         self._steps += 1
         self._step_times.append(int(round(time.time() * 1000)) - start_time)
         self._last_delta = delta
-
-        return self._policy, V, self._steps, self._step_times[-1], reward, delta, self._policy_stable
+        state_value = None
+        if state_to_track is not None:
+            state_value = V[state_to_track]
+        return self._policy, V, self._steps, self._step_times[-1], reward, delta, self._policy_stable, state_value
 
     def reset(self):
         self._policy = np.ones([self._env.nS, self._env.nA]) / self._env.nA

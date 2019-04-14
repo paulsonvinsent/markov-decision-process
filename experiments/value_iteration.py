@@ -37,7 +37,7 @@ class ValueIterationExperiment(BaseExperiment):
 
             v = solvers.ValueIterationSolver(self._details.env, discount_factor=discount_factor)
 
-            stats = self.run_solver_and_collect(v, self.convergence_check_fn)
+            stats = self.run_solver_and_collect(v, self.convergence_check_fn, self._details.state_to_track)
 
             self.log("Took {} steps".format(len(stats.steps)))
             stats.to_csv('{}/VI/{}_{}.csv'.format(OUTPUT_DIRECTORY, self._details.env_name, discount_factor))

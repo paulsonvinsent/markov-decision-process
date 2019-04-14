@@ -84,8 +84,9 @@ class ExperimentStats(object):
         self.converged_values = list()
         self.elapsed_time = 0
         self.optimal_policy = None
+        self.tracking_state_values = list()
 
-    def add(self, policy, v, step, step_time, reward, delta, converged):
+    def add(self, policy, v, step, step_time, reward, delta, converged, tracking_state_value):
         self.policies.append(policy)
         self.vs.append(v)
         self.steps.append(step)
@@ -93,12 +94,14 @@ class ExperimentStats(object):
         self.rewards.append(reward)
         self.deltas.append(delta)
         self.converged_values.append(converged)
+        self.tracking_state_values.append(tracking_state_value)
 
     def to_csv(self, file_name):
         with open(file_name, 'w') as f:
-            f.write("steps,time,reward,delta,converged\n")
+            f.write("steps,time,reward,delta,value_of_state,converged\n")
             writer = csv.writer(f, delimiter=',')
-            writer.writerows(zip(self.steps, self.step_times, self.rewards, self.deltas, self.converged_values))
+            writer.writerows(zip(self.steps, self.step_times, self.rewards, self.deltas, self.tracking_state_values,
+                                 self.converged_values))
 
     def pickle_results(self, file_name_base, map_shape, step_size=1, only_last=False):
         if only_last:
@@ -174,11 +177,12 @@ class ExperimentStats(object):
 
 
 class ExperimentDetails(object):
-    def __init__(self, env, env_name, env_readable_name, seed):
+    def __init__(self, env, env_name, env_readable_name, seed, state_to_track):
         self.env = env
         self.env_name = env_name
         self.env_readable_name = env_readable_name
         self.seed = seed
+        self.state_to_track = state_to_track
 
 
 class BaseExperiment(ABC):
@@ -200,7 +204,7 @@ class BaseExperiment(ABC):
         if self._verbose:
             logger.info(msg.format(*args))
 
-    def run_solver_and_collect(self, solver, convergence_check_fn):
+    def run_solver_and_collect(self, solver, convergence_check_fn, state_to_track):
         stats = ExperimentStats()
 
         t = int(round(time.time() * 1000))
@@ -209,14 +213,14 @@ class BaseExperiment(ABC):
         best_reward = float('-inf')
 
         while not convergence_check_fn(solver, step_count) and step_count < MAX_STEP_COUNT:
-            policy, v, steps, step_time, reward, delta, converged = solver.step()
+            policy, v, steps, step_time, reward, delta, converged, state_value = solver.step(state_to_track)
             step_time = int(round(time.time() * 1000)) - t
             # print('{} {}'.format(reward, best_reward))
             if reward > best_reward:
                 best_reward = reward
                 optimal_policy = policy
 
-            stats.add(policy, v, steps, step_time, reward, delta, converged)
+            stats.add(policy, v, steps, step_time, reward, delta, converged, state_value)
             # if self._verbose:
             #     self.log("Step {}: delta={}, converged={}".format(step_count, delta, converged))
             step_count += 1
