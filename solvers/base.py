@@ -56,7 +56,7 @@ class BaseSolver(ABC):
         self._verbose = verbose
 
     @abstractmethod
-    def step(self):
+    def step(self,state_to_track):
         pass
 
     @abstractmethod

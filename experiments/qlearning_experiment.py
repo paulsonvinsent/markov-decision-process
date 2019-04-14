@@ -14,6 +14,7 @@ if not os.path.exists(OUTPUT_DIRECTORY):
 def random_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000, lr=0.3,
                       decay_fac=0.00001, gamma=0.90,
                       play_solution=False):
+    initial_lr = lr
     # Number of possible actions
     action_size = env.action_space.n
 
@@ -88,7 +89,7 @@ def random_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000,
             time.sleep(0.5)
             env.render()
             print('Episode Reward = ', total_reward)
-    with open("{}/randomq_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, lr, gamma), "w") as f:
+    with open("{}/randomq_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, initial_lr, gamma), "w") as f:
         writer = csv.writer(f, delimiter=',')
         writer.writerows(stats)
     return stats
@@ -97,6 +98,7 @@ def random_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000,
 def epsilon_greedy_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000, lr=0.3,
                               decay_fac=0.00001, gamma=0.90,
                               play_solution=False):
+    initial_lr=lr
     # Number of possible actions
     action_size = env.action_space.n
 
@@ -177,7 +179,7 @@ def epsilon_greedy_q_learning(name, env, state_to_track, episodes=30000, max_ste
             time.sleep(0.5)
             env.render()
             print('Episode Reward = ', total_reward)
-    with open("{}/eps_greedy_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, lr, gamma), "w") as f:
+    with open("{}/eps_greedy_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, initial_lr, gamma), "w") as f:
         writer = csv.writer(f, delimiter=',')
         writer.writerows(stats)
     return stats
@@ -206,10 +208,10 @@ decay_fac = 0.000001  # Decay learning rate each iteration
 def run_qlearning_experiment(name, env, state_to_track=0):
     for lr in [0.1, 0.3, 0.6, 0.9]:
         for gamma in [0.5, 0.7, 0.9, 0.99]:
-            print("Running experiment for lr ={}  gamma ={}".format(lr, gamma))
-            print("Running Epsilon greedy q learning")
+            print("Running experiment {} for lr ={}  gamma ={}".format(name, lr, gamma))
+            print("{} :Running Epsilon greedy q learning", name)
             epsilon_greedy_q_learning(name, env, state_to_track, episodes, max_steps, lr, decay_fac, gamma,
                                       False)
-            print("Running Random search q learning")
+            print("{} : Running Random search q learning,name")
             random_q_learning(name, env, state_to_track, episodes, max_steps, lr, decay_fac, gamma,
                               False)

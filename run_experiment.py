@@ -9,6 +9,8 @@ import environments
 import experiments
 from experiments import qlearning_experiment
 
+# Adapeted from https://github.com/cmaron/CS-7641-assignments
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -68,7 +70,8 @@ if __name__ == '__main__':
                                                                    env['env'].unwrapped.nA))
         experiment_details.append(experiments.ExperimentDetails(
             env['env'], env['name'], env['readable_name'],
-            seed=seed
+            seed,
+            env['state_to_track']
         ))
 
     if verbose:

@@ -22,7 +22,7 @@ class ValueIterationSolver(BaseSolver):
 
         super(ValueIterationSolver, self).__init__(verbose)
 
-    def step(self):
+    def step(self, state_to_track):
         start_time = int(round(time.time() * 1000))
 
         delta = 0
@@ -53,8 +53,11 @@ class ValueIterationSolver(BaseSolver):
             best_action = np.argmax(A)
             # Always take the best action
             self._policy[s, best_action] = 1.0
-
-        return self._policy, self._V, self._steps, self._step_times[-1], reward, delta, self.has_converged()
+        state_value = None
+        if state_to_track is not None:
+            state_value = self._V[state_to_track]
+        return self._policy, self._V, self._steps, self._step_times[
+            -1], reward, delta, self.has_converged(), state_value
 
     def reset(self):
         self._V = np.zeros(self._env.nS)
