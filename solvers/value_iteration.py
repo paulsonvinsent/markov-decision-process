@@ -1,4 +1,5 @@
 import time
+
 import numpy as np
 
 from .base import BaseSolver, one_step_lookahead
@@ -22,7 +23,7 @@ class ValueIterationSolver(BaseSolver):
         super(ValueIterationSolver, self).__init__(verbose)
 
     def step(self):
-        start_time = time.time()
+        start_time = int(round(time.time() * 1000))
 
         delta = 0
         reward = 0
@@ -39,7 +40,7 @@ class ValueIterationSolver(BaseSolver):
 
             # Update the value function. Ref: Sutton book eq. 4.10.
             self._V[s] = best_action_value
-        self._step_times.append(time.time() - start_time)
+        self._step_times.append(int(round(time.time() * 1000)) - start_time)
 
         self._last_delta = delta
         self._steps += 1

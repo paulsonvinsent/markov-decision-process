@@ -20,7 +20,7 @@ class PolicyIterationSolver(BaseSolver):
         super(PolicyIterationSolver, self).__init__(verbose)
 
     def step(self):
-        start_time = time.time()
+        start_time = int(round(time.time() * 1000))
         # Evaluate the current policy
         V = self.evaluate_policy(self._policy, discount_factor=self._discount_factor,
                                  max_steps=self._max_policy_eval_steps)
@@ -56,7 +56,7 @@ class PolicyIterationSolver(BaseSolver):
             self._policy_stable = True
 
         self._steps += 1
-        self._step_times.append(time.time() - start_time)
+        self._step_times.append(int(round(time.time() * 1000)) - start_time)
         self._last_delta = delta
 
         return self._policy, V, self._steps, self._step_times[-1], reward, delta, self._policy_stable

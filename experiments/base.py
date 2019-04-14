@@ -19,8 +19,6 @@ OUTPUT_DIRECTORY = './output'
 
 if not os.path.exists(OUTPUT_DIRECTORY):
     os.makedirs(OUTPUT_DIRECTORY)
-if not os.path.exists('{}/images'.format(OUTPUT_DIRECTORY)):
-    os.makedirs('{}/images'.format(OUTPUT_DIRECTORY))
 
 MAX_STEP_COUNT = 2000
 
@@ -112,12 +110,12 @@ class ExperimentStats(object):
         else:
             l = len(self.policies)
             if step_size == 1 and l > 20:
-                step_size = math.floor(l/20.0)
+                step_size = math.floor(l / 20.0)
             for i, policy in enumerate(self.policies):
-                if i % step_size == 0 or i == l-1:
+                if i % step_size == 0 or i == l - 1:
                     v = self.vs[i].reshape(map_shape)
                     file_name = file_name_base.format(i)
-                    if i == l-1:
+                    if i == l - 1:
                         file_name = file_name_base.format('Last')
                     with open(file_name, 'wb') as f:
                         pickle.dump({'policy': np.reshape(np.argmax(policy, axis=1), map_shape), 'v': v}, f)
@@ -142,15 +140,15 @@ class ExperimentStats(object):
         else:
             l = len(self.policies)
             if step_size == 1 and l > 20:
-                step_size = math.floor(l/20.0)
+                step_size = math.floor(l / 20.0)
             for i, policy in enumerate(self.policies):
-                if i % step_size == 0 or i == l-1:
+                if i % step_size == 0 or i == l - 1:
                     policy = np.reshape(np.argmax(policy, axis=1), map_desc.shape)
                     v = self.vs[i].reshape(map_desc.shape)
 
                     file_name = file_name_base.format('Policy', i)
                     value_file_name = file_name_base.format('Value', i)
-                    if i == l-1:
+                    if i == l - 1:
                         file_name = file_name_base.format('Policy', 'Last')
                         value_file_name = file_name_base.format('Value', 'Last')
 
@@ -206,13 +204,14 @@ class BaseExperiment(ABC):
     def run_solver_and_collect(self, solver, convergence_check_fn):
         stats = ExperimentStats()
 
-        t = time.time()
+        t = int(round(time.time() * 1000))
         step_count = 0
         optimal_policy = None
         best_reward = float('-inf')
 
         while not convergence_check_fn(solver, step_count) and step_count < MAX_STEP_COUNT:
             policy, v, steps, step_time, reward, delta, converged = solver.step()
+            step_time = int(round(time.time() * 1000)) - t
             # print('{} {}'.format(reward, best_reward))
             if reward > best_reward:
                 best_reward = reward
@@ -223,7 +222,7 @@ class BaseExperiment(ABC):
             #     self.log("Step {}: delta={}, converged={}".format(step_count, delta, converged))
             step_count += 1
 
-        stats.elapsed_time = time.time() - t
+        stats.elapsed_time = int(round(time.time() * 1000)) - t
         stats.optimal_policy = stats.policies[-1]  # optimal_policy
         return stats
 
@@ -231,7 +230,7 @@ class BaseExperiment(ABC):
         stats = EvaluationStats()
         for i in range(times):
             # stats.add(np.sum(solver.run_policy(policy)))
-            stats.add(np.mean(solver.run_policy(policy)))
+            stats.add(np.sum(solver.run_policy(policy)))
         stats.compute()
 
         return stats

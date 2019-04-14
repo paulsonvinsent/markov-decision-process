@@ -56,7 +56,7 @@ if __name__ == '__main__':
         },
         {'env': environments.get_taxi_environment(),
          'name': 'taxi',
-         'readable_name': 'Tax problem'}
+         'readable_name': 'Taxi problem'}
 
     ]
 
