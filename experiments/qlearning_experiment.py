@@ -2,7 +2,6 @@ import csv
 import os
 import time
 
-import gym
 import numpy as np
 
 OUTPUT_DIRECTORY = './output/Q'
@@ -184,16 +183,33 @@ def epsilon_greedy_q_learning(name, env, state_to_track, episodes=30000, max_ste
     return stats
 
 
-env = gym.make('FrozenLake8x8-v0')
-# env = gym.make("Taxi-v2")  # Create environment
-state_to_track = 14
-env.render()
-print(env.reset())
-env.render()
-episodes = 20000  # Total episodes
-max_steps = 1000  # Max steps per episode
-lr = 0.3  # Learning rate
-decay_fac = 0.00001  # Decay learning rate each iteration
-gamma = 0.90  # Discounting rate - later rewards impact less
+# env = gym.make('FrozenLake8x8-v0')
+# # env = gym.make("Taxi-v2")  # Create environment
+# state_to_track = 14
+# env.render()
+# print(env.reset())
+# env.render()
+#
+# lr = 0.3  # Learning rate
+# decay_fac = 0.000001  # Decay learning rate each iteration
+# gamma = 0.90  # Discounting rate - later rewards impact less
+# episodes = 30000  # Total episodes
+# max_steps = 1000  # Max steps per episode
+#
+# epsilon_greedy_q_learning('frozen_lake', env, state_to_track, episodes, max_steps, lr, decay_fac, gamma, True)
 
-epsilon_greedy_q_learning('frozen_lake', env, state_to_track, episodes, max_steps, lr, decay_fac, gamma, True)
+episodes = 30000  # Total episodes
+max_steps = 1000  # Max steps per episode
+decay_fac = 0.000001  # Decay learning rate each iteration
+
+
+def run_qlearning_experiment(name, env, state_to_track=0):
+    for lr in [0.1, 0.3, 0.6, 0.9]:
+        for gamma in [0.5, 0.7, 0.9, 0.99]:
+            print("Running experiment for lr ={}  gamma ={}".format(lr, gamma))
+            print("Running Epsilon greedy q learning")
+            epsilon_greedy_q_learning(name, env, state_to_track, episodes, max_steps, lr, decay_fac, gamma,
+                                      False)
+            print("Running Random search q learning")
+            random_q_learning(name, env, state_to_track, episodes, max_steps, lr, decay_fac, gamma,
+                              False)

@@ -174,11 +174,10 @@ class ExperimentStats(object):
 
 
 class ExperimentDetails(object):
-    def __init__(self, env, env_name, env_readable_name, threads, seed):
+    def __init__(self, env, env_name, env_readable_name, seed):
         self.env = env
         self.env_name = env_name
         self.env_readable_name = env_readable_name
-        self.threads = threads
         self.seed = seed
 
 

@@ -7,7 +7,7 @@ import numpy as np
 
 import environments
 import experiments
-from experiments import plotting
+from experiments import qlearning_experiment
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -26,7 +26,6 @@ def run_experiment(experiment_detals, experiment, timing_key, verbose, timings):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run MDP experiments')
-    parser.add_argument('--threads', type=int, default=1, help='Number of threads (defaults to 1, -1 for auto)')
     parser.add_argument('--seed', type=int, help='A random seed to set, if desired')
     parser.add_argument('--policy', action='store_true', help='Run the policy iteration experiment')
     parser.add_argument('--value', action='store_true', help='Run the value iteration experiment')
@@ -36,7 +35,6 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', action='store_true', help='If true, provide verbose output')
     args = parser.parse_args()
     verbose = args.verbose
-    threads = args.threads
 
     seed = args.seed
     if seed is None:
@@ -53,10 +51,13 @@ if __name__ == '__main__':
             'env': environments.get_frozen_lake_environment(),
             'name': 'frozen_lake',
             'readable_name': 'Frozen Lake (8x8)',
+            'state_to_track': 0
         },
         {'env': environments.get_taxi_environment(),
          'name': 'taxi',
-         'readable_name': 'Taxi problem'}
+         'readable_name': 'Taxi problem',
+         'state_to_track': 14
+         }
 
     ]
 
@@ -67,7 +68,6 @@ if __name__ == '__main__':
                                                                    env['env'].unwrapped.nA))
         experiment_details.append(experiments.ExperimentDetails(
             env['env'], env['name'], env['readable_name'],
-            threads=threads,
             seed=seed
         ))
 
@@ -83,14 +83,10 @@ if __name__ == '__main__':
     if args.value or args.all:
         run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings)
 
-    # if args.q or args.all:
-    #     run_experiment(experiment_details, experiments.QLearnerExperiment, 'Q', verbose, timings)
+    if args.q or args.all:
+        for env_desc in envs:
+            env = env_desc['env']
+            state_to_track = env_desc['state_to_track']
+            qlearning_experiment.run_qlearning_experiment(env_desc['name'], env, state_to_track)
 
     logger.info(timings)
-
-    if args.plot:
-        if verbose:
-            logger.info("----------")
-
-        logger.info("Plotting results")
-        plotting.plot_results(envs)
