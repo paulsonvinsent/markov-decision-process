@@ -147,7 +147,7 @@ class BaseSolver(ABC):
         rewards = []
 
         # Clone the environment to get a fresh one
-        env = self.get_environment().new_instance()
+        env = self.get_environment()
         state = env.reset()
 
         done = False
@@ -175,4 +175,3 @@ class BaseSolver(ABC):
         """
         if self._verbose:
             logger.info(msg.format(*args))
-

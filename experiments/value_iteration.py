@@ -26,13 +26,13 @@ class ValueIterationExperiment(BaseExperiment):
         with open(grid_file_name, 'w') as f:
             f.write("params,time,steps,reward_mean,reward_median,reward_min,reward_max,reward_std\n")
 
-        discount_factors = np.append(np.round(np.linspace(0.1, 0.9, num=9), 2), 0.99)
+        discount_factors = np.array([0.1, 0.3, 0.5, 0.7, 0.9, 0.95, 0.99])
         dims = len(discount_factors)
         self.log("Searching VI in {} dimensions".format(dims))
 
         runs = 1
         for discount_factor in discount_factors:
-            t = time.clock()
+            t = time.time()
             self.log("{}/{} Processing VI with discount factor {}".format(runs, dims, discount_factor))
 
             v = solvers.ValueIterationSolver(self._details.env, discount_factor=discount_factor)
@@ -49,7 +49,7 @@ class ValueIterationExperiment(BaseExperiment):
             with open(grid_file_name, 'a') as f:
                 f.write('"{}",{},{},{},{},{},{},{}\n'.format(
                     json.dumps({'discount_factor': discount_factor}).replace('"', '""'),
-                    time.clock() - t,
+                    time.time() - t,
                     len(optimal_policy_stats.rewards),
                     optimal_policy_stats.reward_mean,
                     optimal_policy_stats.reward_median,

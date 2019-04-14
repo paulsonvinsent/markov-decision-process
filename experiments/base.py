@@ -206,7 +206,7 @@ class BaseExperiment(ABC):
     def run_solver_and_collect(self, solver, convergence_check_fn):
         stats = ExperimentStats()
 
-        t = time.clock()
+        t = time.time()
         step_count = 0
         optimal_policy = None
         best_reward = float('-inf')
@@ -223,7 +223,7 @@ class BaseExperiment(ABC):
             #     self.log("Step {}: delta={}, converged={}".format(step_count, delta, converged))
             step_count += 1
 
-        stats.elapsed_time = time.clock() - t
+        stats.elapsed_time = time.time() - t
         stats.optimal_policy = stats.policies[-1]  # optimal_policy
         return stats
 

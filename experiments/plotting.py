@@ -11,21 +11,14 @@ from os.path import basename
 from matplotlib import pyplot as plt
 from shutil import copyfile
 
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 # INPUT_PATH = 'output.final/'
 # OUTPUT_PATH = 'output.final/images/'
 # REPORT_PATH = 'output.final/report/'
 INPUT_PATH = 'output/'
-OUTPUT_PATH = 'output/images/'
-REPORT_PATH = 'output/report/'
-
-if not os.path.exists(REPORT_PATH):
-    os.makedirs(REPORT_PATH)
 
 TO_PROCESS = {
     'PI': {
@@ -55,7 +48,7 @@ def watermark(p):
 
     ax = plt.gca()
     for i in range(1, 11):
-        p.text(0.95, 0.95 - (i * (1.0/10)), '{} {}'.format(GATECH_USERNAME, TERM), transform=ax.transAxes,
+        p.text(0.95, 0.95 - (i * (1.0 / 10)), '{} {}'.format(GATECH_USERNAME, TERM), transform=ax.transAxes,
                fontsize=32, color='gray',
                ha='right', va='bottom', alpha=0.2)
     return p
@@ -141,7 +134,7 @@ def plot_policy_map(title, policy, map_desc, color_map, direction_map):
             p.set_facecolor(color_map[map_desc[i, j]])
             ax.add_patch(p)
 
-            text = ax.text(x+0.5, y+0.5, direction_map[policy[i, j]], weight='bold', size=font_size,
+            text = ax.text(x + 0.5, y + 0.5, direction_map[policy[i, j]], weight='bold', size=font_size,
                            horizontalalignment='center', verticalalignment='center', color='w')
             text.set_path_effects([path_effects.Stroke(linewidth=2, foreground='black'),
                                    path_effects.Normal()])
@@ -164,7 +157,7 @@ def plot_value_map(title, v, map_desc, color_map):
     v_min = np.min(v)
     v_max = np.max(v)
     bins = np.linspace(v_min, v_max, 100)
-    v_red = np.digitize(v, bins)/100.0
+    v_red = np.digitize(v, bins) / 100.0
     for i in range(v.shape[0]):
         for j in range(v.shape[1]):
             value = np.round(v[i, j], 2)
@@ -183,10 +176,10 @@ def plot_value_map(title, v, map_desc, color_map):
             value = np.round(v[i, j], 2)
 
             red = v_red[i, j]
-            text2 = ax.text(x+0.5, y+0.5, value, size=font_size,
-                            horizontalalignment='center', verticalalignment='center', color=(1.0, 1.0-red, 1.0-red))
+            text2 = ax.text(x + 0.5, y + 0.5, value, size=font_size,
+                            horizontalalignment='center', verticalalignment='center', color=(1.0, 1.0 - red, 1.0 - red))
             text2.set_path_effects([path_effects.Stroke(linewidth=1, foreground='black'),
-                                   path_effects.Normal()])
+                                    path_effects.Normal()])
 
     plt.axis('off')
     plt.xlim((0, v.shape[1]))
@@ -243,7 +236,7 @@ def plot_reward_and_delta_vs_steps(title, df, xlabel="Steps", ylabel="Reward"):
 def cli_hist(data, bins=10):
     bars = u' ▁▂▃▄▅▆▇█'
     n, bin_edges = np.histogram(data, bins=bins)
-    n2 = map(int, np.floor(n*(len(bars)-1)/(max(n))))
+    n2 = map(int, np.floor(n * (len(bars) - 1) / (max(n))))
     res = u' '.join(bars[i] for i in n2)
 
     return res
@@ -473,25 +466,3 @@ def problem_name_to_descriptive_name(problem_name):
     if problem_name == 'Q':
         return "Q-Learner"
     return 'Unknown'
-
-
-def plot_results(envs):
-    best_params = {}
-    best_images = {}
-    data_files = {}
-    for problem_name in TO_PROCESS:
-        logger.info("Processing {}".format(problem_name))
-
-        problem = TO_PROCESS[problem_name]
-        problem_path = '{}/{}'.format(INPUT_PATH, problem['path'])
-        problem_image_path = '{}/images/{}'.format(INPUT_PATH, problem['path'])
-
-        best_params[problem_name] = find_optimal_params(problem_name, problem_path, problem['file_regex'])
-        best_images[problem_name] = find_policy_images(problem_image_path, best_params[problem_name])
-        data_files[problem_name] = find_data_files(problem_path, best_params[problem_name])
-
-    copy_best_images(best_images, REPORT_PATH)
-    copy_data_files(data_files, REPORT_PATH)
-    plot_data(data_files, envs, REPORT_PATH)
-    params_df = pd.DataFrame(best_params)
-    params_df.to_csv('{}/params.csv'.format(REPORT_PATH))

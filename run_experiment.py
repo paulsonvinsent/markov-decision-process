@@ -49,14 +49,15 @@ if __name__ == '__main__':
     logger.info("----------")
 
     envs = [
-        # {'env': environments.get_taxi_environment(),
-        #      'name': 'taxi',
-        #      'readable_name': 'Tax problem'},
         {
             'env': environments.get_frozen_lake_environment(),
             'name': 'frozen_lake',
             'readable_name': 'Frozen Lake (8x8)',
-        }
+        },
+        {'env': environments.get_taxi_environment(),
+         'name': 'taxi',
+         'readable_name': 'Tax problem'}
+
     ]
 
     experiment_details = []
@@ -82,8 +83,8 @@ if __name__ == '__main__':
     if args.value or args.all:
         run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings)
 
-    if args.q or args.all:
-        run_experiment(experiment_details, experiments.QLearnerExperiment, 'Q', verbose, timings)
+    # if args.q or args.all:
+    #     run_experiment(experiment_details, experiments.QLearnerExperiment, 'Q', verbose, timings)
 
     logger.info(timings)
 

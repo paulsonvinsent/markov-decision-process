@@ -22,7 +22,7 @@ class ValueIterationSolver(BaseSolver):
         super(ValueIterationSolver, self).__init__(verbose)
 
     def step(self):
-        start_time = time.clock()
+        start_time = time.time()
 
         delta = 0
         reward = 0
@@ -39,7 +39,7 @@ class ValueIterationSolver(BaseSolver):
 
             # Update the value function. Ref: Sutton book eq. 4.10.
             self._V[s] = best_action_value
-        self._step_times.append(time.clock() - start_time)
+        self._step_times.append(time.time() - start_time)
 
         self._last_delta = delta
         self._steps += 1
