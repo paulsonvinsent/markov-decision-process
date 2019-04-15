@@ -1,14 +1,14 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# Frozen lake specific stuff
+# Taxi specific stuff
 columns = ['episode', 'current_time', 'state_value', 'episode_reward', 'learning_rate']
 
 gamma_values = [0.1, 0.3, 0.5, 0.7, 0.9, 0.95, 0.99]
-iterations_for_convergence = [2, 4, 4, 12, 4, 4, 3]
-time_for_convergence = [7, 20, 24, 120, 92, 144, 251]
+iterations_for_convergence = [0, 12, 11, 11, 11, 11, 11]
+time_for_convergence = [0, 685, 927, 1885, 5668, 14738, 56095]
 
-env_name = 'Frozen Lake'
+env_name = 'Taxi'
 
 plt.figure()
 plt.title("{} - Gamma Vs Iterations and Time for Convergence".format('{} Policy Iteration'.format(env_name)))
@@ -21,7 +21,7 @@ for i, txt in enumerate(time_for_convergence):
 plt.legend(loc="best")
 plt.show()
 
-data = pd.read_csv('/Users/pvincent/Desktop/markov-decision-process/output/PI/frozen_lake_0.99_episodes.csv')
+data = pd.read_csv('/Users/pvincent/Desktop/markov-decision-process/output/PI/taxi_0.99_episodes.csv')
 
 steps_array = data[['steps']]
 statevalue_array = data[['value_of_state']]
@@ -35,8 +35,8 @@ plt.plot(steps_array, statevalue_array, 'o-', color="r")
 plt.legend(loc="best")
 plt.show()
 
-iterations_for_convergence = [5, 8, 11, 19, 52, 85, 206]
-time_for_convergence = [6, 10, 14, 24, 64, 110, 255]
+iterations_for_convergence = [8, 14, 22, 42, 139, 284, 1445]
+time_for_convergence = [76, 122, 187, 362, 1192, 2483, 14807]
 
 plt.figure()
 plt.title("{} - Gamma Vs Iterations and Time for Convergence".format('{} Value Iteration'.format(env_name)))
@@ -49,7 +49,7 @@ for i, txt in enumerate(time_for_convergence):
 plt.legend(loc="best")
 plt.show()
 
-data = pd.read_csv('/Users/pvincent/Desktop/markov-decision-process/output/VI/frozen_lake_0.99.csv')
+data = pd.read_csv('/Users/pvincent/Desktop/markov-decision-process/output/VI/taxi_0.99.csv')
 
 steps_array = data[['steps']]
 statevalue_array = data[['value_of_state']]
@@ -76,19 +76,19 @@ plt.show()
 # Effect of learning rate
 
 data1 = pd.read_csv(
-    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_frozen_lake_lr_0.9_gamma_0.99.csv',
+    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_taxi_lr_0.9_gamma_0.99.csv',
     names=columns, header=None)
 
 data2 = pd.read_csv(
-    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_frozen_lake_lr_0.6_gamma_0.99.csv',
+    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_taxi_lr_0.6_gamma_0.99.csv',
     names=columns, header=None)
 
 data3 = pd.read_csv(
-    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_frozen_lake_lr_0.3_gamma_0.99.csv',
+    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_taxi_lr_0.3_gamma_0.99.csv',
     names=columns, header=None)
 
 data4 = pd.read_csv(
-    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_frozen_lake_lr_0.1_gamma_0.99.csv',
+    '/Users/pvincent/Desktop/markov-decision-process/output/Q/eps_greedy_name_taxi_lr_0.1_gamma_0.99.csv',
     names=columns, header=None)
 
 episodes = data1['episode']
@@ -98,7 +98,7 @@ statevalue3 = data3['state_value']
 statevalue4 = data4['state_value']
 
 plt.figure()
-plt.title("{} - Episodes Vs Value of a state (Gamma 0.99)".format('Frozen Lake Q Learning'))
+plt.title("{} - Episodes Vs Value of a state (Gamma 0.99,LR 0.3)".format('Taxi Q Learning'))
 plt.grid()
 plt.xlabel("Episodes")
 plt.ylabel("State Value")
@@ -116,14 +116,14 @@ data1 = pd.read_csv(
     names=columns, header=None)
 
 data2 = pd.read_csv(
-    '/Users/pvincent/Desktop/markov-decision-process/output/Q/randomq_name_frozen_lake_lr_0.3_gamma_0.99.csv',
+    '/Users/pvincent/Desktop/markov-decision-process/output/Q/randomq_name_taxi_lr_0.3_gamma_0.99.csv',
     names=columns, header=None)
 episodes = data1['episode']
 statevalue1 = data1['state_value']
 statevalue2 = data2['state_value']
 
 plt.figure()
-plt.title("{} - Random Search Vs Epsilon Greedy (Gamma 0.99)".format('Frozen Lake Q Learning'))
+plt.title("{} - Random Search Vs Epsilon Greedy (Gamma 0.99 , LR 0.3)".format('Taxi Q Learning'))
 plt.grid()
 plt.xlabel("Episodes")
 plt.ylabel("State Value")

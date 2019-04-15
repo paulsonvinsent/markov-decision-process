@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 
-OUTPUT_DIRECTORY = './output/Q'
+OUTPUT_DIRECTORY = './output/Q2'
 
 if not os.path.exists(OUTPUT_DIRECTORY):
     os.makedirs(OUTPUT_DIRECTORY)
@@ -26,6 +26,8 @@ def random_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000,
     start_time = int(round(time.time() * 1000))
 
     stats = []
+
+    average_steps_to_solution = []
 
     for episode in range(episodes):
 
@@ -65,14 +67,26 @@ def random_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000,
 
         current_time = int(round(time.time() * 1000)) - start_time
         state_value = np.max(qtable[state_to_track, :])
-        stats.append([episode, current_time, state_value, episode_reward])
+        stats.append([episode, current_time, state_value, episode_reward, lr])
 
         episode += 1
 
-        if (episode % (episodes / 10) == 0):
+        if (episode % (episodes / 60) == 0):
             print('episode = ', episode)
             print('learning rate = ', lr)
             print('-----------')
+            total_steps = 0.0
+            for i in range(10):
+                state = env.reset()
+                steps = 0.0
+                done = False
+                while (done == False):
+                    action = np.argmax(qtable[state, :])  # Choose best action (Q-table)
+                    state, reward, done, info = env.step(action)  # Take action
+                    steps = steps + 1.0  # Summing rewards
+                total_steps = total_steps + steps
+            avg_steps = total_steps / 10.0
+            average_steps_to_solution.append([episode, avg_steps])
 
     if (play_solution):
         # New environment
@@ -92,13 +106,17 @@ def random_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000,
     with open("{}/randomq_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, initial_lr, gamma), "w") as f:
         writer = csv.writer(f, delimiter=',')
         writer.writerows(stats)
+    with open("{}/randomq_avg_steps_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, initial_lr, gamma),
+              "w") as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerows(average_steps_to_solution)
     return stats
 
 
 def epsilon_greedy_q_learning(name, env, state_to_track, episodes=30000, max_steps=1000, lr=0.3,
                               decay_fac=0.00001, gamma=0.90,
                               play_solution=False):
-    initial_lr=lr
+    initial_lr = lr
     # Number of possible actions
     action_size = env.action_space.n
 
@@ -112,6 +130,7 @@ def epsilon_greedy_q_learning(name, env, state_to_track, episodes=30000, max_ste
     start_time = int(round(time.time() * 1000))
 
     stats = []
+    average_steps_to_solution = []
 
     for episode in range(episodes):
 
@@ -155,14 +174,26 @@ def epsilon_greedy_q_learning(name, env, state_to_track, episodes=30000, max_ste
 
         current_time = int(round(time.time() * 1000)) - start_time
         state_value = np.max(qtable[state_to_track, :])
-        stats.append([episode, current_time, state_value, episode_reward])
+        stats.append([episode, current_time, state_value, episode_reward, lr])
 
         episode += 1
 
-        if (episode % (episodes / 10) == 0):
+        if (episode % (episodes / 60) == 0):
             print('episode = ', episode)
             print('learning rate = ', lr)
             print('-----------')
+            total_steps = 0.0
+            for i in range(10):
+                state = env.reset()
+                steps = 0.0
+                done = False
+                while (done == False):
+                    action = np.argmax(qtable[state, :])  # Choose best action (Q-table)
+                    state, reward, done, info = env.step(action)  # Take action
+                    steps = steps + 1.0  # Summing rewards
+                total_steps = total_steps + steps
+            avg_steps = total_steps / 10.0
+            average_steps_to_solution.append([episode, avg_steps])
 
     if (play_solution):
         # New environment
@@ -182,6 +213,10 @@ def epsilon_greedy_q_learning(name, env, state_to_track, episodes=30000, max_ste
     with open("{}/eps_greedy_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, initial_lr, gamma), "w") as f:
         writer = csv.writer(f, delimiter=',')
         writer.writerows(stats)
+    with open("{}/eps_greedy_steps_name_{}_lr_{}_gamma_{}.csv".format(OUTPUT_DIRECTORY, name, initial_lr, gamma),
+              "w") as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerows(average_steps_to_solution)
     return stats
 
 
