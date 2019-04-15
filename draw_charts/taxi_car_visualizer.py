@@ -109,6 +109,23 @@ plt.plot(episodes, statevalue4, 'o-', color="c", label="Learning rate 0.1")
 plt.legend(loc="best")
 plt.show()
 
+time1 = data1['current_time']
+time2 = data2['current_time']
+time3 = data3['current_time']
+time4 = data4['current_time']
+
+plt.figure()
+plt.title("{} - Episodes Vs Time".format('Taxi Q Learning'))
+plt.grid()
+plt.xlabel("Episodes")
+plt.ylabel("Time")
+plt.plot(episodes, time1, 'o-', color="r", label="Learning rate 0.9")
+plt.plot(episodes, time2, 'o-', color="g", label="Learning rate 0.6")
+plt.plot(episodes, time3, 'o-', color="b", label="Learning rate 0.3")
+plt.plot(episodes, time4, 'o-', color="c", label="Learning rate 0.1")
+plt.legend(loc="best")
+plt.show()
+
 selected_learning_rate = 0.3
 
 data1 = pd.read_csv(

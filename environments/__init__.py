@@ -9,3 +9,5 @@ def get_frozen_lake_environment():
 
 def get_taxi_environment():
     return gym.make('Taxi-v2')
+
+
